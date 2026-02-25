@@ -1,0 +1,27 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  sitemi-yayinla:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Adım: Depodaki kodları sanal makineye indir
+      - name: Checkout kodlar
+        uses: actions/checkout@v4
+      - name: 2. Adim - Sayfalari paketle
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: 3. Adim - Paketleri yayinla
+        id: deployment
+        uses: actions/deploy-pages@v4
