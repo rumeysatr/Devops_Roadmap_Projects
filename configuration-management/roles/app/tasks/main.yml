@@ -1,0 +1,16 @@
+---
+# tasks file for roles/apps
+- name: Create website directory
+  ansible.builtin.file:
+    path: /var/www/myapp
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Upload and extract static website
+  ansible.builtin.unarchive:
+    src: site.tar.gz
+    dest: /var/www/myapp
+    owner: www-data
+    group: www-data

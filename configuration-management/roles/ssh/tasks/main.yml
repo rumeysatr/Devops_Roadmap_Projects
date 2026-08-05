@@ -1,0 +1,8 @@
+---
+# tasks file for roles/ssh
+
+- name: Add public SSH key
+  ansible.posix.authorized_key:
+    user: ubuntu
+    state: present
+    key: "{{ lookup('ansible.builtin.file', role_path + '/files/authorized_key.pub') }}"

@@ -1,0 +1,35 @@
+# --- Secrets / environment files ---
+.env
+.env.*
+!.env.example
+
+# --- Ansible ---
+*.retry
+*.log
+.cache/
+.vault_pass
+vault-password-file
+
+# --- SSH keys & certificates (private keys must never be committed) ---
+*.pem
+*.key
+*.ppk
+*.p12
+*.crt
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- OS / editor ---
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
