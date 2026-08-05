@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EC2 Instance Project Overview</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-strong: #ffffff;
+      --ink: #16202a;
+      --muted: #58636f;
+      --line: rgba(22, 32, 42, 0.12);
+      --teal: #17807a;
+      --teal-deep: #0f5f62;
+      --gold: #d08b2e;
+      --rose: #b55f56;
+      --shadow: 0 20px 50px rgba(18, 31, 44, 0.12);
+      --content-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(208, 139, 46, 0.18), transparent 28%),
+        radial-gradient(circle at right 15% top 12%, rgba(23, 128, 122, 0.16), transparent 26%),
+        linear-gradient(180deg, #f6f2eb 0%, #eceff2 55%, #edf1f3 100%);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    .shell {
+      width: min(calc(100% - 2rem), var(--content-width));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      background: rgba(244, 241, 234, 0.72);
+      border-bottom: 1px solid rgba(22, 32, 42, 0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .brand-badge {
+      width: 2.6rem;
+      height: 2.6rem;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--gold) 100%);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      box-shadow: 0 10px 26px rgba(23, 128, 122, 0.25);
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-copy strong {
+      font-size: 0.98rem;
+      letter-spacing: 0;
+    }
+
+    .brand-copy span {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .nav a {
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      transition: 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      background: rgba(23, 128, 122, 0.1);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .hero {
+      padding: 4.5rem 0 3rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-visual {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      color: var(--teal-deep);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.1;
+    }
+
+    h1 {
+      margin-top: 1.1rem;
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      max-width: 11ch;
+    }
+
+    .hero-copy p {
+      margin: 1.2rem 0 0;
+      max-width: 62ch;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.8rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.9rem 1.15rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.96rem;
+      border: 1px solid transparent;
+      transition: 160ms ease;
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(22, 32, 42, 0.2);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.64);
+      color: var(--ink);
+      border-color: rgba(22, 32, 42, 0.08);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .pill-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .pill {
+      min-width: 0;
+      padding: 0.95rem 1rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      box-shadow: 0 14px 35px rgba(18, 31, 44, 0.06);
+    }
+
+    .pill strong,
+    .pill span {
+      display: block;
+    }
+
+    .pill strong {
+      font-size: 1.02rem;
+    }
+
+    .pill span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.15rem;
+    }
+
+    .hero-visual {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.72));
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .hero-visual svg {
+      width: 100%;
+      height: auto;
+    }
+
+    .section {
+      padding: 1.6rem 0 0;
+    }
+
+    .section-band {
+      margin-top: 2rem;
+      padding: 2rem;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-head p {
+      margin: 0.65rem 0 0;
+      color: var(--muted);
+      max-width: 68ch;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .stat {
+      padding: 1.15rem;
+      border-radius: 8px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(1.3rem, 2vw, 2rem);
+      margin-bottom: 0.35rem;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 1.4rem;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 1.25rem;
+      border-radius: 8px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      min-width: 0;
+    }
+
+    .panel h3 {
+      font-size: 1.12rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0.85rem;
+      align-items: start;
+    }
+
+    .step {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(180deg, var(--teal) 0%, var(--teal-deep) 100%);
+    }
+
+    .timeline-item strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-item p,
+    .panel p,
+    .panel li {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .checklist,
+    .outcome-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .checklist li,
+    .outcome-list li {
+      display: grid;
+      grid-template-columns: 1.3rem minmax(0, 1fr);
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .checklist svg,
+    .outcome-list svg {
+      margin-top: 0.15rem;
+      color: var(--teal);
+    }
+
+    .arch {
+      padding: 1.35rem;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(239, 245, 247, 0.96), rgba(252, 248, 242, 0.96));
+      border: 1px solid var(--line);
+    }
+
+    .code-block {
+      margin-top: 1rem;
+      padding: 1rem 1.1rem;
+      border-radius: 8px;
+      background: #16202a;
+      color: #e8eef2;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      padding: 1.2rem;
+      border-radius: 8px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+    }
+
+    .feature-card h3 {
+      margin-bottom: 0.55rem;
+      font-size: 1.05rem;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 2.5rem 0 3rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 1060px) {
+      .hero-grid,
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
+
+      .pill-row,
+      .stats,
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .section-head {
+        align-items: start;
+      }
+
+      .topbar-inner {
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 3.4rem;
+      }
+
+      .section-band {
+        padding: 1.35rem;
+      }
+
+      .pill-row,
+      .stats,
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#top">
+        <span class="brand-badge">EC2</span>
+        <span class="brand-copy">
+          <strong>EC2 Instance Project</strong>
+          <span>AWS, Ubuntu, SSH, Nginx, Static Website</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Page sections">
+        <a href="#overview">Overview</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#flow">Flow</a>
+        <a href="#goals">Stretch Goals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3 4 7v5c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V7l-8-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Cloud Foundations Project
+          </span>
+          <h1>Launch an EC2 server and publish a static site.</h1>
+          <p>
+            This project walks through the full path from creating an AWS account to deploying a simple HTML website on an Ubuntu-based EC2 instance. It is designed to build practical confidence with core AWS infrastructure, SSH access, basic server administration, and static site delivery.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#requirements">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Explore Project Scope
+            </a>
+            <a class="button secondary" href="#flow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 12h16M4 6h16M4 18h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Review Deployment Flow
+            </a>
+          </div>
+          <div class="pill-row" aria-label="Core stack summary">
+            <div class="pill">
+              <strong>Ubuntu Server</strong>
+              <span>Linux host on AWS EC2</span>
+            </div>
+            <div class="pill">
+              <strong>t2.micro</strong>
+              <span>Free Tier eligible instance</span>
+            </div>
+            <div class="pill">
+              <strong>Ports 22 &amp; 80</strong>
+              <span>SSH access and HTTP delivery</span>
+            </div>
+            <div class="pill">
+              <strong>Nginx</strong>
+              <span>Simple web server for static files</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="EC2 project architecture illustration">
+          <svg viewBox="0 0 760 600" role="img" aria-labelledby="hero-svg-title">
+            <title id="hero-svg-title">Architecture overview from local machine to EC2 and static website</title>
+            <defs>
+              <linearGradient id="cardFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#eef5f6"/>
+              </linearGradient>
+              <linearGradient id="accentFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#17807a"/>
+                <stop offset="100%" stop-color="#d08b2e"/>
+              </linearGradient>
+            </defs>
+
+            <rect x="16" y="16" width="728" height="568" rx="22" fill="url(#cardFill)" stroke="#16202a" stroke-opacity="0.14"/>
+            <rect x="42" y="42" width="676" height="92" rx="18" fill="#16202a"/>
+            <text x="72" y="84" fill="#ffffff" font-size="28" font-family="Inter, Arial, sans-serif" font-weight="700">Project Deployment Path</text>
+            <text x="72" y="114" fill="#b7c3cb" font-size="17" font-family="Inter, Arial, sans-serif">Provision infrastructure, connect securely, serve a static website.</text>
+
+            <g transform="translate(56 176)">
+              <rect x="0" y="0" width="168" height="150" rx="18" fill="#ffffff" stroke="#d7e1e6"/>
+              <rect x="22" y="24" width="124" height="82" rx="10" fill="#edf3f5" stroke="#c8d8df"/>
+              <rect x="44" y="114" width="80" height="12" rx="6" fill="#16202a" opacity="0.12"/>
+              <text x="84" y="58" text-anchor="middle" fill="#16202a" font-size="18" font-family="Inter, Arial, sans-serif" font-weight="700">Your Machine</text>
+              <text x="84" y="84" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">SSH key pair</text>
+              <text x="84" y="104" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Terminal access</text>
+            </g>
+
+            <g transform="translate(292 176)">
+              <rect x="0" y="0" width="176" height="150" rx="18" fill="#ffffff" stroke="#d7e1e6"/>
+              <path d="M60 86c-20 0-36-14-36-31 0-15 12-28 28-30 7-18 25-30 45-30 27 0 49 20 50 46 17 4 29 17 29 33 0 19-17 34-38 34H60Z" transform="translate(0 32)" fill="#edf7f6" stroke="#c9dfdc"/>
+              <text x="88" y="58" text-anchor="middle" fill="#16202a" font-size="18" font-family="Inter, Arial, sans-serif" font-weight="700">AWS EC2</text>
+              <text x="88" y="84" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Ubuntu Server</text>
+              <text x="88" y="104" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Public IP enabled</text>
+            </g>
+
+            <g transform="translate(528 176)">
+              <rect x="0" y="0" width="176" height="150" rx="18" fill="#ffffff" stroke="#d7e1e6"/>
+              <rect x="34" y="30" width="108" height="90" rx="14" fill="#fff7ed" stroke="#edd8bc"/>
+              <path d="M54 54h68M54 76h68M54 98h44" stroke="#d08b2e" stroke-width="8" stroke-linecap="round"/>
+              <text x="88" y="58" text-anchor="middle" fill="#16202a" font-size="18" font-family="Inter, Arial, sans-serif" font-weight="700">Static Website</text>
+              <text x="88" y="84" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Nginx serves</text>
+              <text x="88" y="104" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">HTML over HTTP</text>
+            </g>
+
+            <path d="M224 251H292" stroke="url(#accentFill)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M468 251H528" stroke="url(#accentFill)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="258" cy="251" r="12" fill="#17807a"/>
+            <circle cx="498" cy="251" r="12" fill="#d08b2e"/>
+            <text x="258" y="286" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">SSH</text>
+            <text x="498" y="286" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">HTTP</text>
+
+            <g transform="translate(56 378)">
+              <rect x="0" y="0" width="648" height="158" rx="18" fill="#16202a"/>
+              <text x="30" y="40" fill="#ffffff" font-size="19" font-family="Inter, Arial, sans-serif" font-weight="700">Representative server tasks</text>
+              <text x="30" y="72" fill="#9fb2bf" font-size="16" font-family="SFMono-Regular, Consolas, monospace">sudo apt update &amp;&amp; sudo apt install -y nginx</text>
+              <text x="30" y="100" fill="#9fb2bf" font-size="16" font-family="SFMono-Regular, Consolas, monospace">sudo cp index.html /var/www/html/index.html</text>
+              <text x="30" y="128" fill="#9fb2bf" font-size="16" font-family="SFMono-Regular, Consolas, monospace">http://&lt;public-ip&gt;</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview" class="section">
+      <div class="shell section-band">
+        <div class="section-head">
+          <div>
+            <h2>Project Overview</h2>
+            <p>
+              The objective is straightforward: provision a Linux server in AWS, connect to it securely over SSH, install a web server, and publish a simple static website that is reachable through the instance public IP address.
+            </p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong>1 AWS account</strong>
+            <span>Foundation for launching and managing cloud resources.</span>
+          </div>
+          <div class="stat">
+            <strong>1 EC2 instance</strong>
+            <span>Ubuntu on a Free Tier oriented compute target.</span>
+          </div>
+          <div class="stat">
+            <strong>2 open ports</strong>
+            <span>Port 22 for SSH and port 80 for website traffic.</span>
+          </div>
+          <div class="stat">
+            <strong>1 public IP</strong>
+            <span>The address used to access the deployed website.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="requirements" class="section">
+      <div class="shell section-band">
+        <div class="section-head">
+          <div>
+            <h2>Required Deliverables</h2>
+            <p>
+              These are the core tasks expected in the project. Completing them gives you a working static site on AWS and a usable foundation for later infrastructure work.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="panel">
+            <h3>Implementation Sequence</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="step">1</div>
+                <div>
+                  <strong>Create or prepare an AWS account</strong>
+                  <p>Get familiar with the AWS Management Console and the region defaults available to your account.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="step">2</div>
+                <div>
+                  <strong>Launch an Ubuntu EC2 instance</strong>
+                  <p>Choose a <code>t2.micro</code> instance type, keep the default VPC and subnet, and ensure a public IP is assigned.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="step">3</div>
+                <div>
+                  <strong>Configure inbound access</strong>
+                  <p>Allow port <code>22</code> for SSH and port <code>80</code> for HTTP in the instance security group.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="step">4</div>
+                <div>
+                  <strong>Create or reuse an SSH key pair</strong>
+                  <p>Use the private key from that pair to authenticate your connection to the Linux server.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="step">5</div>
+                <div>
+                  <strong>Connect and prepare the server</strong>
+                  <p>SSH into the machine, update the package index, and install a web server such as Nginx.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="step">6</div>
+                <div>
+                  <strong>Deploy a simple HTML page</strong>
+                  <p>Place a static HTML file in the web root and confirm it is accessible through the instance public IP address.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Checklist</h3>
+            <ul class="checklist">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Ubuntu Server AMI selected for the EC2 host.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><code>t2.micro</code> chosen to stay aligned with AWS Free Tier guidance.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Default VPC and subnet used for a minimal first deployment.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Inbound rules created for SSH and HTTP traffic.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Public IP address assigned and verified for browser access.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Nginx installed and serving the deployed HTML content.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow" class="section">
+      <div class="shell section-band">
+        <div class="section-head">
+          <div>
+            <h2>Deployment Flow</h2>
+            <p>
+              The project is small by design, but it covers the essential cloud workflow: provisioning, access control, operating system setup, web server installation, and publishing content to a public endpoint.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="arch">
+            <svg viewBox="0 0 760 320" role="img" aria-labelledby="flow-diagram-title">
+              <title id="flow-diagram-title">Step diagram for deploying a static website on EC2</title>
+              <defs>
+                <linearGradient id="flowAccent" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#17807a"/>
+                  <stop offset="100%" stop-color="#d08b2e"/>
+                </linearGradient>
+              </defs>
+              <rect x="20" y="80" width="150" height="140" rx="20" fill="#ffffff" stroke="#d4dde2"/>
+              <rect x="210" y="80" width="150" height="140" rx="20" fill="#ffffff" stroke="#d4dde2"/>
+              <rect x="400" y="80" width="150" height="140" rx="20" fill="#ffffff" stroke="#d4dde2"/>
+              <rect x="590" y="80" width="150" height="140" rx="20" fill="#ffffff" stroke="#d4dde2"/>
+              <path d="M170 150h40M360 150h40M550 150h40" stroke="url(#flowAccent)" stroke-width="10" stroke-linecap="round"/>
+              <circle cx="190" cy="150" r="12" fill="#17807a"/>
+              <circle cx="380" cy="150" r="12" fill="#1d7070"/>
+              <circle cx="570" cy="150" r="12" fill="#d08b2e"/>
+              <text x="95" y="122" text-anchor="middle" fill="#16202a" font-size="20" font-family="Inter, Arial, sans-serif" font-weight="700">Provision</text>
+              <text x="95" y="152" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Create EC2</text>
+              <text x="95" y="176" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Assign public IP</text>
+              <text x="285" y="122" text-anchor="middle" fill="#16202a" font-size="20" font-family="Inter, Arial, sans-serif" font-weight="700">Secure</text>
+              <text x="285" y="152" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Key pair</text>
+              <text x="285" y="176" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Ports 22 / 80</text>
+              <text x="475" y="122" text-anchor="middle" fill="#16202a" font-size="20" font-family="Inter, Arial, sans-serif" font-weight="700">Configure</text>
+              <text x="475" y="152" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Update packages</text>
+              <text x="475" y="176" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Install Nginx</text>
+              <text x="665" y="122" text-anchor="middle" fill="#16202a" font-size="20" font-family="Inter, Arial, sans-serif" font-weight="700">Publish</text>
+              <text x="665" y="152" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Deploy HTML</text>
+              <text x="665" y="176" text-anchor="middle" fill="#58636f" font-size="15" font-family="Inter, Arial, sans-serif">Open public IP</text>
+            </svg>
+
+            <div class="code-block" aria-label="Representative commands">
+ssh -i my-key.pem ubuntu@your-ec2-public-ip
+sudo apt update
+sudo apt install -y nginx
+sudo cp index.html /var/www/html/index.html
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>What this teaches</h3>
+            <ul class="outcome-list">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3 4 7v5c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V7l-8-4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>How AWS resources are created and exposed to the internet in a controlled way.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3 4 7v5c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V7l-8-4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>How to connect to Linux servers over SSH using a key pair instead of a password workflow.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3 4 7v5c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V7l-8-4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>How a web server like Nginx delivers static files from a Linux host.</span>
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3 4 7v5c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V7l-8-4Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>How security groups, instance sizing, public networking, and deployment steps fit together.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="goals" class="section">
+      <div class="shell section-band">
+        <div class="section-head">
+          <div>
+            <h2>Stretch Goals</h2>
+            <p>
+              Once the base deployment works, the next improvements are about domain management, encryption, and automation.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <article class="feature-card">
+            <h3>Custom Domain</h3>
+            <p>Use Amazon Route 53 to map a friendly domain name to the EC2-hosted website.</p>
+          </article>
+          <article class="feature-card">
+            <h3>HTTPS</h3>
+            <p>Issue a free TLS certificate with Let's Encrypt and serve the site securely over HTTPS.</p>
+          </article>
+          <article class="feature-card">
+            <h3>CI/CD Pipeline</h3>
+            <p>Automate deployments with AWS CodePipeline so site changes can be published with less manual effort.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell section-band">
+        <div class="section-head">
+          <div>
+            <h2>Learning Outcomes</h2>
+            <p>
+              After finishing this project, you should be comfortable launching EC2 instances, opening the right network access, connecting through SSH, and deploying basic web content on cloud infrastructure.
+            </p>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <article class="feature-card">
+            <h3>AWS Resource Basics</h3>
+            <p>Understand what an instance is, how instance types differ, and what a first cloud deployment requires.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Linux Server Administration</h3>
+            <p>Gain hands-on familiarity with package updates, service installation, and moving files into a web root.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Cloud Website Delivery</h3>
+            <p>Deploy and verify a static website through the public IP of the running EC2 instance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      This page summarizes the EC2 Instance project requirements, progression, and learning targets in a single English-language document suitable for serving directly from the server root.
+    </div>
+  </footer>
+</body>
+</html>
