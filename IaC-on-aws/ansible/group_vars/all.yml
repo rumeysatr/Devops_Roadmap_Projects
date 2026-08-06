@@ -1,0 +1,7 @@
+---
+# Connection settings injected at runtime from .env (see ../.env.example).
+# Keep this file free of any IP addresses, hostnames or key paths.
+
+ansible_host: "{{ lookup('env', 'SERVER_IP') }}"
+ansible_user: "{{ lookup('env', 'SSH_USER') | default('ubuntu', true) }}"
+ansible_ssh_private_key_file: "{{ lookup('env', 'SSH_KEY_PATH') }}"

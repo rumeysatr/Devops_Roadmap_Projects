@@ -1,0 +1,28 @@
+# --- Secrets / environment files ---
+.env
+.env.*
+!.env.example
+
+# --- Terraform ---
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfvars
+crash.log
+
+# --- SSH keys & certificates (private keys must never be committed) ---
+*.pem
+*.key
+*.ppk
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# --- OS / editor ---
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
