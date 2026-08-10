@@ -1,10 +1,10 @@
 {
-  "name": "node-service",
+  "name": "node-service-deployment",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "build": "echo \"No build required\""
+    "build": "echo \"No build step required\""
   },
   "dependencies": {
     "express": "^5.1.0"
