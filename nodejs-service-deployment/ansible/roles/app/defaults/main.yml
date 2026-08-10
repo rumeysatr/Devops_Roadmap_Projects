@@ -1,0 +1,8 @@
+---
+app_name: node-service
+app_user: ubuntu
+app_group: ubuntu
+app_directory: /opt/node-service
+app_repository: https://github.com/Devops_Roadmap_Projects/tree/Intermediate-Projects/nodejs-service-deployment.git
+app_branch: main
+app_port: 3000

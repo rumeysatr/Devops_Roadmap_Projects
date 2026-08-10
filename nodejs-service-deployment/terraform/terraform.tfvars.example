@@ -1,0 +1,4 @@
+aws_region       = "eu-central-1"
+instance_type    = "t3.micro"
+public_key_path  = "~/.ssh/node-service-aws.pub"
+ssh_allowed_cidr = "18.184.6.208/32"

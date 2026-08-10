@@ -1,0 +1,17 @@
+[Unit]
+Description=Node.js Hello World Service
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_directory }}
+Environment=NODE_ENV=production
+Environment=PORT={{ app_port }}
+ExecStart=/usr/bin/node {{ app_directory }}/server.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
