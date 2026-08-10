@@ -1,0 +1,12 @@
+{
+  "name": "node-service",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo \"No build required\""
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
