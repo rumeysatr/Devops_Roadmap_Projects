@@ -1,0 +1,7 @@
+app_name: todo-app
+app_user: ubuntu
+app_directory: /opt/todo-app
+docker_image: "rutatar/todo-api:latest"
+app_port: 3000
+mongo_uri: "mongodb://mongo:27017/todos"
+

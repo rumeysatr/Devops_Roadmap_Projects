@@ -1,0 +1,5 @@
+- name: Todo uygulamasını sunucuda kur
+  hosts: todo_app
+  become: true
+  roles:
+    - role: docker

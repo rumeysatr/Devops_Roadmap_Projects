@@ -1,0 +1,42 @@
+# --- Node ---
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# --- Ortam dosyaları (gerçek değerler locale kalır) ---
+.env
+.env.*
+!.env.example
+!.env.docker.example
+
+# --- Terraform ---
+# Provider önbelleği ve state asla commit'lenmez (tfstate içinde kaynak detaları olabilir)
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+# Ortama özel değerler (ssh_allowed_cidr = ev IP'n burada duruyor)
+*.tfvars
+# NOT: terraform.lock.hcl bilerek commit'lenir (provider sürümünü sabitler)
+
+# --- Ansible ---
+# inventory'de canlı EC2 IP'si var; örneği (inventory.ini.example) commit'lenir
+ansible/inventory.ini
+*.retry
+
+# --- SSH anahtarları (repoda zaten olmamalı, güvenlik ağı) ---
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# --- OS / editör ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# --- Loglar ---
+*.log
