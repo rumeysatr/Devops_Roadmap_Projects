@@ -62,6 +62,6 @@ jobs:
             docker compose up -d
             docker image prune -f
             sleep 3
-            # Smoke test: SG 3000'i dışarıya açmadığı için sunucunun İÇİNDEN sorguluyoruz
-            curl --fail --retry 5 --retry-delay 3 --retry-connrefused --silent http://localhost:3000/todos > /dev/null \
+            # Smoke test: nginx (80) üzerinden, sunucunun İÇİNDEN sorguluyoruz
+            curl --fail --retry 5 --retry-delay 3 --retry-connrefused --silent http://localhost/todos > /dev/null \
               && echo "Smoke test OK"

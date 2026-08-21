@@ -3,19 +3,18 @@ services:
     build: .
     container_name: todo-api
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000" # sadece compose ağı içinde; dışarıya kapalı
     env_file:
       - .env.docker
     depends_on:
       mongo:
         condition: service_healthy
+
   mongo:
     image: mongo:7
     container_name: todo-mongo
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     volumes:
       - todo-data:/data/db
     healthcheck:
@@ -23,6 +22,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  nginx:
+    image: nginx:alpine
+    container_name: todo-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80" # dış dünyaya açık tek port
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
 
 volumes:
   todo-data:

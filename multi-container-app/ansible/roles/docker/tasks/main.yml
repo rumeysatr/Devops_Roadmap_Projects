@@ -38,6 +38,19 @@
       PORT={{ app_port }}
       MONGO_URI={{ mongo_uri }}
 
+- name: nginx dizinini oluştur
+  ansible.builtin.file:
+    path: "{{ app_directory }}/nginx"
+    state: directory
+    owner: "{{ app_user }}"
+    mode: "0755"
+
+- name: nginx.conf'u kopyala
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../nginx/nginx.conf" # repo kökündeki tek kaynak
+    dest: "{{ app_directory }}/nginx/nginx.conf"
+    mode: "0644"
+
 - name: Docker imajını çek
   ansible.builtin.command: docker compose pull
   args:
