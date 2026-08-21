@@ -1,0 +1,67 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main] # main'e push -> pipeline tetiklenir
+  workflow_dispatch: # Actions sekmesinden elle de çalıştırılabilir
+
+# Aynı anda birden fazla deploy'u sıraya koy (ikinci push birinciyi ezmez)
+concurrency:
+  group: todo-app-production
+  cancel-in-progress: false
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Job 1: İmajı inşa et ve Docker Hub'a push'la
+  # ─────────────────────────────────────────────
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu checkout et
+        uses: actions/checkout@v4
+
+      - name: Docker Hub'a login ol
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Metadata çıkar (tag'ler için)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/todo-api
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=,format=short
+
+      - name: İmajı inşa et ve push'la
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+  # ─────────────────────────────────────────────
+  # Job 2: Sunucuda dağıt
+  # ─────────────────────────────────────────────
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push # önce imaj push'lansın, olmadan deploy yok
+    steps:
+      - name: Sunucuda imajı çek, compose up ve smoke test
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script_stop: true # bir komut başarısızsa adım kırmızı olsun
+          script: |
+            cd /opt/todo-app
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
+            sleep 3
+            # Smoke test: SG 3000'i dışarıya açmadığı için sunucunun İÇİNDEN sorguluyoruz
+            curl --fail --retry 5 --retry-delay 3 --retry-connrefused --silent http://localhost:3000/todos > /dev/null \
+              && echo "Smoke test OK"
