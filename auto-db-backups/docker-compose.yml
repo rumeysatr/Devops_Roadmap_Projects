@@ -1,0 +1,13 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"  # sadece sunucunun kendisine açık
+    volumes:
+      - mongo_data:/data/db
+
+  volumes:
+    mongo_data:
+      
